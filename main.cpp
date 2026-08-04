@@ -9,8 +9,6 @@
 #include <chrono>
 #include <cmath>
 #include <sstream>
-#include <algorithm>
-#include <cctype>
 
 namespace fs = std::filesystem;
 
@@ -18,15 +16,6 @@ struct AppConfig {
     std::string lite_mode = "default";
     bool enable_dnd = false;
 };
-
-// --- HELPER FUNCTIONS ---
-
-std::string trim(const std::string& str) {
-    size_t first = str.find_first_not_of(" \n\r\t");
-    if (first == std::string::npos) return "";
-    size_t last = str.find_last_not_of(" \n\r\t");
-    return str.substr(first, (last - first + 1));
-}
 
 bool write_sysfs(const std::string& path, const std::string& value) {
     std::string chmod_cmd = "chmod 666 " + path + " 2>/dev/null";
@@ -54,83 +43,6 @@ std::string exec_cmd(const std::string& cmd) {
     pclose(pipe);
     return result;
 }
-
-
-
-std::string get_device_name() {
-
-    std::string name = trim(exec_cmd("getprop ro.product.marketname 2>/dev/null"));
-    
-
-    if (name.empty() || name == "unknown") {
-        name = trim(exec_cmd("getprop ro.product.model 2>/dev/null"));
-    }
-    
-
-    if (name.empty() || name == "unknown") {
-        std::string brand = trim(exec_cmd("getprop ro.product.brand 2>/dev/null"));
-        std::string device = trim(exec_cmd("getprop ro.product.device 2>/dev/null"));
-        if (!brand.empty() && !device.empty()) {
-            name = brand + " " + device;
-        }
-    }
-    
-    return name.empty() ? "Android Device" : name;
-}
-
-std::string get_chipset_name() {
-
-    std::vector<std::string> soc_props = {
-        "ro.soc.model",
-        "ro.chipname",
-        "ro.hardware.chipname",
-        "vendor.chip.model",
-        "gsm.chipname"
-    };
-
-    for (const auto& prop : soc_props) {
-        std::string val = trim(exec_cmd("getprop " + prop + " 2>/dev/null"));
-        if (!val.empty() && val != "unknown") {
-            return val;
-        }
-    }
-
-    // 2. Cek Node Sysfs Kernel Hardware
-    if (fs::exists("/sys/devices/soc0/machine")) {
-        std::string machine = trim(read_sysfs("/sys/devices/soc0/machine"));
-        if (!machine.empty() && machine != "unknown") return machine;
-    }
-
-    if (fs::exists("/sys/devices/soc0/family")) {
-        std::string family = trim(read_sysfs("/sys/devices/soc0/family"));
-        if (!family.empty() && family != "unknown") return family;
-    }
-
-    // 3. Cek Informasi Hardware dari /proc/cpuinfo
-    std::string cpuinfo = exec_cmd("grep -i 'Hardware' /proc/cpuinfo 2>/dev/null");
-    if (!cpuinfo.empty()) {
-        size_t colon = cpuinfo.find(':');
-        if (colon != std::string::npos) {
-            std::string hw = trim(cpuinfo.substr(colon + 1));
-            if (!hw.empty() && hw != "unknown") return hw;
-        }
-    }
-
-    // 4. Fallback Terakhir: Platform bawaan & Kapitalisasi
-    std::string platform = trim(exec_cmd("getprop ro.board.platform 2>/dev/null"));
-    if (platform.empty() || platform == "unknown") {
-        platform = trim(exec_cmd("getprop ro.hardware 2>/dev/null"));
-    }
-
-    if (!platform.empty() && platform != "unknown") {
-        std::transform(platform.begin(), platform.end(), platform.begin(), ::toupper);
-        return platform;
-    }
-
-    return "Android SoC";
-}
-
-// --- LOGIKA DAEMON UTAMA ---
 
 bool is_mediatek() {
     std::string vendor = read_sysfs("/sys/devices/soc0/vendor");
@@ -650,27 +562,9 @@ int handle_daemon() {
     return 0;
 }
 
-// --- MAIN ENTRY POINT ---
-
 int main(int argc, char* argv[]) {
     if (argc < 2) return 1;
     std::string command = argv[1];
-
-    // CLI Commands untuk WebUI
-    if (command == "get_device_info") {
-        std::string d_name = get_device_name();
-        std::string chip = get_chipset_name();
-        std::cout << "{\"device_name\":\"" << d_name << "\",\"chipset\":\"" << chip << "\"}" << std::endl;
-        return 0;
-    }
-    if (command == "get_device_name") {
-        std::cout << get_device_name() << std::endl;
-        return 0;
-    }
-    if (command == "get_chipset") {
-        std::cout << get_chipset_name() << std::endl;
-        return 0;
-    }
 
     if (command == "daemon" || command == "--daemon") return handle_daemon();
     if (command == "apply_tcp_bbr" && argc >= 3)         { apply_tcp_bbr(std::string(argv[2]) == "1"); return 0; }

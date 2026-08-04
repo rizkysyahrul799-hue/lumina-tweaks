@@ -1,5 +1,5 @@
+#!/system/bin/sh
 #
-# Copyright (C) 2024-2026 Rem01Gaming
 # Copyright (C) 2026 LUMina Team
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +15,46 @@
 # limitations under the License.
 #
 
+# ─── 1. Terminate Active Daemon & Supervisor ─────────────────
 
-killall -9 luminad lumina encored 2>/dev/null
+pkill -9 -f "luminad" 2>/dev/null
+killall -9 luminad 2>/dev/null
+
+# ─── 2. Restore System Thermal & Unmount Battery Spoof ───────
+
+
+for temp_node in \
+    "/sys/class/power_supply/battery/temp" \
+    "/sys/class/power_supply/bms/temp" \
+    "/sys/class/power_supply/battery/batt_temp" \
+    "/sys/class/power_supply/main/temp"; do
+    if grep -qs "$temp_node" /proc/mounts; then
+        umount -f "$temp_node" 2>/dev/null
+    fi
+done
+
+
+start thermal 2>/dev/null
+start thermald 2>/dev/null
+start vendor.thermal-hal-2-0 2>/dev/null
+start vendor.thermal-hal-1-0 2>/dev/null
+start mi_thermald 2>/dev/null
+start thermal_monitor 2>/dev/null
+
+# ─── 3. Remove Configurations & System Scripts ────────────────
 
 rm -rf /data/adb/.config/lumina
 rm -f /data/adb/service.d/.lumina_cleanup.sh
-rm -f /data/adb/service.d/.encore_cleanup.sh
 
-need_gone="luminad lumina_profiler lumina_utility lumina_log encored encore_profiler encore_utility encore_log"
+# ─── 4. Remove KernelSU / APatch Binaries & Symlinks ──────────
+
+need_gone="luminad"
 manager_paths="/data/adb/ap/bin /data/adb/ksu/bin"
 
 for dir in $manager_paths; do
-	if [ -d "$dir" ]; then
-		for bin in $need_gone; do
-			rm -f "$dir/$bin"
-		done
-	fi
+    if [ -d "$dir" ]; then
+        for bin in $need_gone; do
+            rm -f "$dir/$bin"
+        done
+    fi
 done

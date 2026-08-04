@@ -32,7 +32,7 @@
         </div>
 
         <div class="space-y-[2px]">
-          <!-- CPU Freq Slider Card (First Item - 24px Top, 6px Bottom) -->
+          <!-- CPU Freq Slider Card -->
           <div class="bg-surface-container-low rounded-t-[24px] rounded-b-[6px] p-4 transition-all">
             <div class="flex items-center gap-4 min-w-0 mb-2">
               <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
@@ -41,7 +41,7 @@
                   <rect x="9" y="9" width="6" height="6"/>
                   <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/>
                   <line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/>
-                  <line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/>
+                  <line x1="20" y1="9" x2="23" y2="9"/><line x1="15" y1="15" x2="23" y2="15"/>
                   <line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/>
                 </svg>
               </div>
@@ -53,7 +53,6 @@
               </div>
             </div>
 
-            <!-- Original Slider UI -->
             <div class="px-1 mt-1">
               <div class="relative w-full h-6 flex items-center">
                 <div class="absolute inset-x-0 h-3.5 bg-on-surface/15 rounded-full overflow-hidden pointer-events-none">
@@ -91,7 +90,7 @@
             </div>
           </div>
 
-          <!-- Disable Thermal Card (Last Item - 6px Top, 24px Bottom) -->
+          <!-- Disable Thermal Card -->
           <div class="bg-surface-container-low rounded-t-[6px] rounded-b-[24px] flex items-center justify-between px-5 py-4 transition-all">
             <div class="flex items-center gap-4 min-w-0 flex-1">
               <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
@@ -128,19 +127,21 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
-          <div class="bg-surface-container-low rounded-[24px] p-4 flex items-center gap-3 cursor-pointer hover:bg-surface-container transition-all active:scale-[0.99]" @click="showRefreshModal = true">
-            <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Refresh Rate Card (MATI & GELAP SESUAI SCREENSHOT) -->
+          <div class="bg-surface-container-lowest/50 opacity-40 rounded-[24px] p-4 flex items-center gap-3 pointer-events-none select-none">
+            <div class="w-10 h-10 rounded-xl bg-surface-container-high/40 text-on-surface-variant/60 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
                 <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
               </svg>
             </div>
             <div class="min-w-0 flex-1 flex flex-col justify-center">
-              <h3 class="text-sm font-medium text-on-surface leading-tight">{{ $t('settings_page.refresh_rate.title') }}</h3>
-              <p class="text-xs text-primary font-semibold mt-1">{{ selectedRefreshRate }}</p>
+              <h3 class="text-sm font-medium text-on-surface-variant/70 leading-tight">{{ $t('settings_page.refresh_rate.title') }}</h3>
+              <p class="text-xs text-on-surface-variant/50 font-medium mt-1">{{ selectedRefreshRate }}</p>
             </div>
           </div>
 
+          <!-- Render Engine Card (AKTIF) -->
           <div class="bg-surface-container-low rounded-[24px] p-4 flex items-center gap-3 cursor-pointer hover:bg-surface-container transition-all active:scale-[0.99]" @click="showRenderModal = true">
             <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -164,7 +165,7 @@
         </div>
 
         <div class="space-y-[2px]">
-          <!-- Mode Lite (First - 24px Top, 6px Bottom) -->
+          <!-- Mode Lite -->
           <div class="bg-surface-container-low rounded-t-[24px] rounded-b-[6px] flex items-center justify-between px-5 py-4 transition-all">
             <div class="flex items-center gap-4 min-w-0 flex-1">
               <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
@@ -188,7 +189,7 @@
             />
           </div>
 
-          <!-- RAM Optimization (Middle - 6px All) -->
+          <!-- RAM Optimization -->
           <div class="bg-surface-container-low rounded-[6px] flex items-center justify-between px-5 py-4 transition-all">
             <div class="flex items-center gap-4 min-w-0 flex-1">
               <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
@@ -215,7 +216,7 @@
             />
           </div>
 
-          <!-- TCP BBR Optimization (Middle - 6px All) -->
+          <!-- TCP BBR Optimization -->
           <div class="bg-surface-container-low rounded-[6px] flex items-center justify-between px-5 py-4 transition-all">
             <div class="flex items-center gap-4 min-w-0 flex-1">
               <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
@@ -241,7 +242,7 @@
             />
           </div>
 
-          <!-- MediaTek Anti-Throttling (Last - 6px Top, 24px Bottom) -->
+          <!-- MediaTek Anti-Throttling -->
           <div class="bg-surface-container-low rounded-t-[6px] rounded-b-[24px] flex items-center justify-between px-5 py-4 transition-all">
             <div class="flex items-center gap-4 min-w-0 flex-1">
               <div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
@@ -271,7 +272,7 @@
 
     </div>
 
-    <!-- Modal Refresh Rate -->
+    <!-- Modal Refresh Rate (Tetap tersimpan di kode tapi tidak ter-trigger) -->
     <div v-if="showRefreshModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click.self="showRefreshModal = false">
       <div class="bg-surface rounded-2xl p-5 w-full max-w-xs space-y-3 shadow-xl border border-on-surface/10">
         <h3 class="text-base font-semibold text-on-surface">{{ $t('settings_page.refresh_rate.modal_title') }}</h3>
@@ -316,6 +317,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLuminaConfigStore } from '@/stores/LuminaConfig'
+import { exec } from '@/utils/exec'
 
 import IconDots from '@/components/icons/IconDots.vue'
 import UiToggle from '@/components/ui/UiToggle.vue'
@@ -332,7 +334,7 @@ const showRenderModal = ref(false)
 const selectedRefreshRate = ref('60 Hz')
 const selectedRender = ref('Vulkan')
 
-const refreshOptions = ['Auto', '60 Hz', '90 Hz', '120 Hz']
+const refreshOptions = ref(['Auto', '60 Hz', '90 Hz', '120 Hz'])
 const renderOptions = ['Auto', 'Vulkan', 'OpenGL', 'Skia']
 
 onMounted(async () => {
@@ -347,6 +349,18 @@ onMounted(async () => {
   }
   if (luminaConfigStore.renderEngine) {
     selectedRender.value = luminaConfigStore.renderEngine
+  }
+
+  try {
+    const res = await exec('luminad get_supported_hz')
+    if (res && res.trim()) {
+      const parsed = JSON.parse(res.trim())
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        refreshOptions.value = ['Auto', ...parsed]
+      }
+    }
+  } catch (e) {
+    console.warn('Gagal memuat dynamic Hz, memakai fallback options:', e)
   }
 })
 
@@ -387,7 +401,8 @@ const selectRefreshRate = (hz) => {
   selectedRefreshRate.value = hz
   showRefreshModal.value = false
   if (luminaConfigStore.setRefreshRate) {
-    luminaConfigStore.setRefreshRate(hz)
+    const cleanHz = hz.replace(' Hz', '').trim()
+    luminaConfigStore.setRefreshRate(cleanHz)
   }
 }
 

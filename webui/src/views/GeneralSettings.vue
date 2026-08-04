@@ -206,7 +206,50 @@ const handleSaveLog = async () => {
   const fileName = `Lumina_Log_${dateStr}_${timeStr}.txt`
   const logPath = `/sdcard/${fileName}`
 
-  const cmd = `LOG="${logPath}"; echo "==========================================" > $LOG; echo "           LUMINA TWEAKS LOG REPORT       " >> $LOG; echo "==========================================" >> $LOG; echo "Waktu         : $(date)" >> $LOG; echo "Brand / Model : $(getprop ro.product.brand) $(getprop ro.product.model) ($(getprop ro.product.device))" >> $LOG; echo "Android Ver   : $(getprop ro.build.version.release) (SDK $(getprop ro.build.version.sdk))" >> $LOG; echo "Kernel Ver    : $(uname -a)" >> $LOG; echo "SELinux       : $(getenforce)" >> $LOG; echo ""; echo "==========================================" >> $LOG; echo "          STATUS MODUL & CONFIG          " >> $LOG; echo "==========================================" >> $LOG; ls -la /data/adb/modules/lumina >> $LOG; echo ""; echo "==========================================" >> $LOG; echo "            CPU FREQ & THERMAL            " >> $LOG; echo "==========================================" >> $LOG; for cpu in /sys/devices/system/cpu/cpu[0-9]*; do echo "$(basename $cpu): $(cat $cpu/cpufreq/scaling_cur_freq 2>/dev/null || echo 'N/A') Hz (gov: $(cat $cpu/cpufreq/scaling_governor 2>/dev/null || echo 'N/A'))" >> $LOG; done; echo ""; echo "==========================================" >> $LOG; echo "          MODULE EXECUTION LOGS           " >> $LOG; echo "==========================================" >> $LOG; if [ -f /data/adb/modules/lumina/lumina.log ]; then cat /data/adb/modules/lumina/lumina.log >> $LOG; fi; echo ""; echo "==========================================" >> $LOG; echo "          SYSTEM LOG (DMESG TAIL)         " >> $LOG; echo "==========================================" >> $LOG; dmesg | tail -n 50 >> $LOG; echo ""; echo "==========================================" >> $LOG; echo "          SYSTEM LOG (LOGCAT TAIL)        " >> $LOG; echo "==========================================" >> $LOG; logcat -d -t 100 >> $LOG; chmod 666 $LOG`
+  // DIBERSIHKAN: Dibuat rapi tanpa dmesg & logcat
+  const cmd = `
+LOG="${logPath}"
+{
+  echo "=========================================="
+  echo "       LUMINA TWEAKS DIAGNOSTICS          "
+  echo "=========================================="
+  echo "Waktu         : $(date)"
+  echo "Brand / Model : $(getprop ro.product.brand) $(getprop ro.product.model) ($(getprop ro.product.device))"
+  echo "Android Ver   : $(getprop ro.build.version.release) (SDK $(getprop ro.build.version.sdk))"
+  echo "Kernel Ver    : $(uname -r)"
+  echo "SELinux       : $(getenforce)"
+  echo ""
+  echo "=========================================="
+  echo "            STATUS DAEMON & CORE          "
+  echo "=========================================="
+  PID=$(pgrep -f "luminad" || echo "")
+  if [ -n "$PID" ]; then
+    echo "Status Daemon   : AKTIF ✅ (PID: $PID)"
+  else
+    echo "Status Daemon   : MATI / CRASH ❌"
+  fi
+  echo ""
+  echo "=========================================="
+  echo "              CONFIG JSON                 "
+  echo "=========================================="
+  if [ -f /data/adb/.config/lumina/config.json ]; then
+    cat /data/adb/.config/lumina/config.json
+  else
+    echo "File config.json tidak ditemukan."
+  fi
+  echo ""
+  echo "=========================================="
+  echo "          LUMINA SERVICE LOGS             "
+  echo "=========================================="
+  if [ -f /data/adb/modules/lumina/lumina.log ]; then
+    cat /data/adb/modules/lumina/lumina.log
+  else
+    echo "Belum ada catatan log dari daemon (lumina.log)."
+  fi
+  echo "=========================================="
+} > "$LOG"
+chmod 666 "$LOG"
+`.trim()
 
   try {
     await exec(cmd)

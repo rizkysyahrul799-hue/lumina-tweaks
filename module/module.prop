@@ -1,7 +1,7 @@
 id=lumina
 name=LUMina Tweaks
-version=v1.0
-versionCode=100
+version=v1.1.0
+versionCode=110
 author=Mall
-description=enjoy
+description=Modular C++ native optimization engine for gaming performance and thermal management.
 webuiIcon=webroot/favicon.ico

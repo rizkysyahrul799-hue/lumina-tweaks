@@ -1,11 +1,11 @@
 # Third Party Notices
 
-This project, Encore Tweaks, incorporates code from the following open source projects.
+This project, LUMina Tweaks, incorporates code and logic from the following open source projects and contributors.
 
 ## Apache License 2.0
-This project, Encore Tweaks, is licensed under the Apache License, Version 2.0.
+This project, LUMina Tweaks, is licensed under the Apache License, Version 2.0.
 
-    Copyright (C) 2024-2025 Rem01Gaming
+    Copyright (C) 2026 @kimalaja (https://t.me/MallArchiven)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this project except in compliance with the License.
@@ -21,7 +21,30 @@ This project, Encore Tweaks, is licensed under the Apache License, Version 2.0.
 
 ---
 
-The following third-party components are used in this project:
+The following third-party components and references are used in this project:
+
+## Encore Tweaks (Apache License 2.0)
+**Component:** Base module framework, WebUI Vue.js architecture, and shell implementation
+
+    Copyright (C) 2024-2026 Rem01Gaming
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+## Liliya2727 & Zexshia Code References
+**Component:** Code references, optimization logic, and feature concepts
+
+    Copyright (c) Liliya2727 (https://github.com/Liliya2727)
+    Copyright (c) Zexshia (https://github.com/Zexshia)
 
 ## KTweak (BSD 2-Clause License)
 **Component:** Base functionality derived from KTweak
@@ -209,4 +232,4 @@ The following third-party components are used in this project:
 
 ---
 
-This file must be included with all distributions of Encore Tweaks.
+This file must be included with all distributions of LUMina Tweaks.
