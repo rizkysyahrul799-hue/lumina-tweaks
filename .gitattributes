@@ -1,4 +1,4 @@
-# Sembunyikan bahasa pendukung & file non-C++/Vue
+# Sembunyikan bahasa pendukung
 *.sh linguist-vendored
 *.c linguist-vendored
 *.h linguist-vendored
@@ -6,11 +6,12 @@
 *.css linguist-vendored
 *.html linguist-vendored
 
-# Sembunyikan aset & komponen UI berat biar Vue turun ke ~40%
+# Sembunyikan komponen & views berat di webui
 webui/public/** linguist-vendored
 webui/src/assets/** linguist-vendored
 webui/src/components/** linguist-vendored
+webui/src/views/** linguist-vendored
 
-# Paksa C++ tetap terdeteksi 100%
+# Paksa C++ tetap terdeteksi utama
 *.cpp linguist-detectable=true
 *.cpp linguist-vendored=false
