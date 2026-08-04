@@ -1,2 +1,10 @@
-webui/** linguist-vendored=true
-webui/** linguist-detectable=false
+# Sembunyikan bahasa selain Vue & C++
+*.sh linguist-vendored
+*.c linguist-vendored
+*.css linguist-vendored
+*.html linguist-vendored
+
+# Sembunyikan JS murni & folder build di webui biar fokus ke .vue
+webui/**/*.js linguist-vendored
+webui/node_modules/** linguist-vendored
+webui/dist/** linguist-vendored
