@@ -49,7 +49,8 @@ Settings can be changed via **WebUI** or edited manually using the JSON files.
 ## Community & Credits
 
 - **Developer**: [@kimalaja](https://t.me/MallArchiven)
-- **Special Thanks**: [Rem01Gaming](https://github.com/Rem01Gaming) (Base WebUI), [Liliya2727](https://github.com/Liliya2727) (Code & Logic References)
+- **Special Thanks**: [Rem01Gaming](https://github.com/Rem01Gaming) (Base WebUI),
+-  [Liliya2727](https://github.com/Liliya2727) (Code & Logic References)
 - **Repository**: [lumina-tweaks](https://github.com/rizkysyahrul799-hue/lumina-tweaks)
 
 ---
