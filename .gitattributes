@@ -1,4 +1,4 @@
-# Sembunyikan Shell, C, JS, CSS, HTML
+# Sembunyikan bahasa pendukung
 *.sh linguist-vendored
 *.c linguist-vendored
 *.h linguist-vendored
@@ -6,10 +6,11 @@
 *.css linguist-vendored
 *.html linguist-vendored
 
-# Sembunyikan assets & komponen UI pendukung biar Vue gak terlalu dominan
-webui/src/assets/** linguist-vendored
+# Pangkas byte Vue dengan menyembunyikan folder components
 webui/src/components/** linguist-vendored
 
-# Deteksi C++ dan file Vue utama
+# Pastikan C++ & sisa Vue terdeteksi penuh
 *.cpp linguist-detectable=true
-*.vue linguist-detectable=true
+*.cpp linguist-vendored=false
+webui/src/App.vue linguist-detectable=true
+webui/src/views/** linguist-detectable=true
