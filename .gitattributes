@@ -1,10 +1,15 @@
-# Sembunyikan bahasa selain Vue & C++
+# Sembunyikan Shell, C, JS, CSS, HTML
 *.sh linguist-vendored
 *.c linguist-vendored
+*.h linguist-vendored
+*.js linguist-vendored
 *.css linguist-vendored
 *.html linguist-vendored
 
-# Sembunyikan JS murni & folder build di webui biar fokus ke .vue
-webui/**/*.js linguist-vendored
-webui/node_modules/** linguist-vendored
-webui/dist/** linguist-vendored
+# Sembunyikan assets & komponen UI pendukung biar Vue gak terlalu dominan
+webui/src/assets/** linguist-vendored
+webui/src/components/** linguist-vendored
+
+# Deteksi C++ dan file Vue utama
+*.cpp linguist-detectable=true
+*.vue linguist-detectable=true
