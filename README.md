@@ -66,8 +66,7 @@ Special thanks to the open-source community and developers whose work inspired a
 
 - **[@kimalaja](https://t.me/MallArchiven)** - Project Lead & Developer
 - **[Rem01Gaming](https://github.com/Rem01Gaming)** - For the WebUI Vue.js base framework and project inspiration.
-- **[Liliya2727](https://github.com/Liliya2727)** - For code references and contributions.
-- **[Zexshia](https://github.com/Zexshia)** - For code references, tweak logic, and feature implementation ideas.
+- **[Liliya2727](https://github.com/Liliya2727)** - For code references, tweak logic, and feature implementation ideas.
 - **[KernelSU](https://github.com/tiann/KernelSU)**, **[APatch](https://github.com/bmax121/APatch)**, & **[Magisk](https://github.com/topjohnwu/Magisk)** - For the Android root framework ecosystem.
 
 ---
