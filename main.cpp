@@ -17,9 +17,8 @@ struct AppConfig {
     bool enable_dnd = false;
 };
 
+// Fix: Hapus system("chmod") berulang untuk efisiensi CPU & baterai
 bool write_sysfs(const std::string& path, const std::string& value) {
-    std::string chmod_cmd = "chmod 666 " + path + " 2>/dev/null";
-    system(chmod_cmd.c_str());
     std::ofstream file(path);
     if (!file.is_open()) return false;
     file << value;
@@ -56,6 +55,15 @@ void send_notification(const std::string& title, const std::string& message) {
     std::string cmd = "su 2000 -c \"cmd notification post -S bigtext -t '"
                       + title + "' 'lumina_notif' '" + message + "'\" 2>/dev/null";
     exec_cmd(cmd);
+}
+
+// Fix: Deteksi Layar Akurat & Ringan (Mendukung Android 10-15 & Custom ROM)
+bool is_screen_on() {
+    std::string bright = read_sysfs("/sys/class/backlight/panel0-backlight/brightness");
+    if (!bright.empty() && bright != "0\n" && bright != "0") return true;
+
+    std::string screen = exec_cmd("dumpsys display 2>/dev/null | grep -E 'mScreenState=ON|state=ON|mWakefulness=Awake'");
+    return !screen.empty();
 }
 
 bool parse_json_bool(const std::string& json, const std::string& key) {
@@ -132,50 +140,6 @@ bool evaluate_lite_mode(const std::string& package_name, const std::map<std::str
         if (it->second.lite_mode == "off") return false;
     }
     return get_global_lite_mode();
-}
-
-int get_sf_index_by_fps(float target_fps) {
-    std::string dump = exec_cmd("dumpsys display 2>/dev/null | grep -E 'id=[0-9]+.*fps=[0-9]'");
-    std::istringstream stream(dump);
-    std::string line;
-    while (std::getline(stream, line)) {
-        int sf_id = -1;
-        float fps = 0;
-        if (sscanf(line.c_str(), " {id=%d, width=%*d, height=%*d, fps=%f", &sf_id, &fps) == 2) {
-            if (sf_id >= 0 && std::fabs(fps - target_fps) < 1.0f) return sf_id;
-        }
-        if (sscanf(line.c_str(), " id=%d, width=%*d, height=%*d, fps=%f", &sf_id, &fps) == 2) {
-            if (sf_id >= 0 && std::fabs(fps - target_fps) < 1.0f) return sf_id;
-        }
-    }
-    return -1;
-}
-
-int get_default_sf_index() {
-    std::string dump = exec_cmd("dumpsys display 2>/dev/null");
-    int default_id = -1;
-    size_t pos = dump.find("defaultMode ");
-    if (pos != std::string::npos)
-        sscanf(dump.c_str() + pos, "defaultMode %d", &default_id);
-    if (default_id < 0) default_id = get_sf_index_by_fps(60.0f);
-    if (default_id < 0) default_id = 0;
-    return default_id;
-}
-
-void apply_refresh_rate(const std::string& rate) {
-    if (rate == "auto" || rate == "Auto" || rate == "0" || rate.empty()) {
-        int idx = get_default_sf_index();
-        exec_cmd("service call SurfaceFlinger 1035 i32 " + std::to_string(idx) + " 2>/dev/null");
-        return;
-    }
-
-    float target_hz = 0;
-    try { target_hz = std::stof(rate); } catch (...) { return; }
-
-    int sf_id = get_sf_index_by_fps(target_hz);
-    if (sf_id >= 0) {
-        exec_cmd("service call SurfaceFlinger 1035 i32 " + std::to_string(sf_id) + " 2>/dev/null");
-    }
 }
 
 void apply_render_engine(const std::string& engine) {
@@ -405,7 +369,6 @@ int handle_daemon() {
     bool last_logd_state = false;
     bool last_global_lite_state = false;
     bool last_disable_thermal_state = false;
-    std::string last_refresh_rate = "";
     std::string last_render_engine = "";
     int last_cpu_limit = -1;
 
@@ -452,12 +415,6 @@ int handle_daemon() {
                 }
             }
 
-            std::string cur_hz = parse_json_string(cfg_str, "refresh_rate");
-            if (!cur_hz.empty() && cur_hz != last_refresh_rate) {
-                apply_refresh_rate(cur_hz);
-                last_refresh_rate = cur_hz;
-            }
-
             std::string cur_render = parse_json_string(cfg_str, "render_engine");
             if (!cur_render.empty() && cur_render != last_render_engine) {
                 apply_render_engine(cur_render);
@@ -489,8 +446,8 @@ int handle_daemon() {
             }
         }
 
-        std::string screen = exec_cmd("dumpsys power 2>/dev/null | grep -E 'mHoldingDisplaySuspendBlocker=true|Display Power: state=ON'");
-        if (screen.empty()) {
+        // Cek status layar
+        if (!is_screen_on()) {
             if (current_profile != "eco") {
                 handle_apply_profile("eco");
                 current_profile = "eco";
@@ -573,7 +530,6 @@ int main(int argc, char* argv[]) {
     if (command == "apply_logd_killer" && argc >= 3)     { apply_logd_killer(std::string(argv[2]) == "1"); return 0; }
     if (command == "apply_gpu_boost" && argc >= 3)       { apply_gpu_boost(std::stoi(argv[2])); return 0; }
     if (command == "apply_disable_thermal" && argc >= 3) { std::string(argv[2]) == "1" ? disable_all_thermal() : enable_all_thermal(); return 0; }
-    if ((command == "set_refresh_rate" || command == "set-rr") && argc >= 3) { apply_refresh_rate(argv[2]); return 0; }
     if (command == "set_render_engine" && argc >= 3)     { apply_render_engine(argv[2]); return 0; }
 
     if (command == "apply_cpu_limit" && argc >= 3) {
