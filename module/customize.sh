@@ -65,40 +65,29 @@ mkdir -p "$MODULE_CONFIG"
 if [ ! -f "$MODULE_CONFIG/config.json" ]; then
     cat <<'EOF' > "$MODULE_CONFIG/config.json"
 {
-  "auto_mode": true,
-  "disable_thermal": true,
-  "ram_tweaks": true,
-  "mtk_tweaks": true,
-  "tcp_bbr": true,
-  "disable_logd": true,
-  "refresh_rate": "auto",
+  "auto_mode": false,
+  "disable_thermal": false,
+  "ram_tweaks": false,
+  "mtk_tweaks": false,
+  "tcp_bbr": false,
+  "disable_logd": false,
+  "refresh_rate": "default",
   "render_engine": "default",
   "cpu_limit": 100
 }
 EOF
 fi
 
+
 if [ ! -f "$MODULE_CONFIG/gamelist.json" ]; then
     cat <<'EOF' > "$MODULE_CONFIG/gamelist.json"
-{
-  "com.mobile.legends": {
-    "perf_lite_mode": "default",
-    "dnd_on_gaming": "false",
-    "app_priority": "default",
-    "game_preload": "default",
-    "refresh_rate": "default",
-    "renderer": "default",
-    "resolution_downscale": "default",
-    "resolution_fps": "60"
-  }
-}
+{}
 EOF
 fi
 
 ui_print "- Setting executable permissions..."
 set_perm_recursive "$BIN_DIR" 0 0 0755 0755
 chmod 755 "$DAEMON_BIN"
-
 
 chcon u:object_r:system_file:s0 "$DAEMON_BIN" 2>/dev/null || chcon u:object_r:adb_data_file:s0 "$DAEMON_BIN" 2>/dev/null
 

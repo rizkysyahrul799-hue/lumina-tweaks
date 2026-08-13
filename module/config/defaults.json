@@ -1,0 +1,10 @@
+{
+  "thermal_disable": false,
+  "refresh_rate_auto": false,
+  "perf_refresh_rate": 60,
+  "normal_refresh_rate": 60,
+  "disable_jitter": false,
+  "vm_swappiness": 60,
+  "vm_vfs_cache_pressure": 100,
+  "io_scheduler_mode": "default"
+}
